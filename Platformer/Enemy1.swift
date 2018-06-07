@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import SpriteKit
 
-class Enemy1 : ObjectThatMoves, ObjectThatAttacks {
+class Enemy1 : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks {
+    
     func move() {
-        <#code#>
+        // TODO
     }
     
     func attack() {
-        <#code#>
+        // TODO
     }
-    
 }

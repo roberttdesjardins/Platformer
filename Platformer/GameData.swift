@@ -13,8 +13,14 @@ import GameplayKit
 
 class GameData {
     static let shared = GameData()
+    
+    let playerName = "player"
     let playerSize = CGSize(width: 40, height: 40)
-    let playerTexture = ""
+    let playerTexture = "" // TODO
+    
+    let enemy1Name = "enemy1"
+    let enemy1Size = CGSize(width: 40, height: 40)
+    let enemy1Texture = "" // TODO
     
     private init() { }
 }

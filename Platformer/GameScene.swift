@@ -10,11 +10,21 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
+    let worldNode = SKNode()
     
     private var lastUpdateTime : TimeInterval = 0
     
     override func sceneDidLoad() {
+        addChild(worldNode)
         self.lastUpdateTime = 0
+        setUpPlayer()
+    }
+    
+    func setUpPlayer() {
+        let player:Player = Player(imageNamed: "player_idle_frame_0_delay-0.13s")
+        player.initPlayer()
+        player.position = CGPoint(x: size.width * (1/4), y: size.height * (1/3))
+        worldNode.addChild(player)
     }
     
     
@@ -41,12 +51,9 @@ class GameScene: SKScene {
     }
 }
 
+// PROTOCOLS
 protocol Entity {
-    var name: String {get set}
     static func uid() -> String
-    
-    var size: CGSize {get set}
-    var texture: String {get set}
 }
 
 extension Entity {
