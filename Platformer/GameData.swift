@@ -16,11 +16,19 @@ class GameData {
     
     let playerName = "player"
     let playerSize = CGSize(width: 40, height: 40)
-    let playerTexture = "" // TODO
+    let playerTexture = SKTexture(imageNamed: "player_idle_frame_0_delay-0.13s")
+    let playerHealth = 100
+    let playerMoveSpeed = 10
+    let playerJumpHeight = 10
+    
+    let platformName = "platform"
     
     let enemy1Name = "enemy1"
     let enemy1Size = CGSize(width: 40, height: 40)
     let enemy1Texture = "" // TODO
+    let enemy1Health = 10
+    let enemy1MoveSpeed = 10
+    let enemy1JumpHeight = 10
     
     private init() { }
 }

@@ -10,6 +10,10 @@ import Foundation
 import SpriteKit
 
 class Enemy1 : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks {
+    var moveSpeed: Int = GameData.shared.enemy1MoveSpeed
+    
+    var health: Int = GameData.shared.enemy1Health
+    
     
     func move() {
         // TODO

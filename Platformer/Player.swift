@@ -9,9 +9,16 @@
 import Foundation
 import SpriteKit
 
-class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks {
+class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectThatJumps {
+    var jumpHeight: Int = GameData.shared.playerJumpHeight
     
+    var moveSpeed: Int = GameData.shared.playerMoveSpeed
+    
+    var health: Int = GameData.shared.playerHealth
+    
+    let uid: String = Player.uid()
     func initPlayer() {
+        self.texture = GameData.shared.playerTexture
         self.size = GameData.shared.playerSize
         self.zPosition = 6
         self.name = GameData.shared.playerName
@@ -31,6 +38,10 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks {
     
     func attack() {
         // TODO
+    }
+    
+    func jump() {
+        
     }
     
     func playerIdleAnim(player: Player) {
