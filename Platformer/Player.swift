@@ -10,11 +10,12 @@ import Foundation
 import SpriteKit
 
 class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectThatJumps {
+    var isAlive = true
     var jumpHeight: Int = GameData.shared.playerJumpHeight
-    
     var moveSpeed: Int = GameData.shared.playerMoveSpeed
-    
     var health: Int = GameData.shared.playerHealth
+    var attackDamage: Int = GameData.shared.playerAttackDamage
+    
     
     let uid: String = Player.uid()
     func initPlayer() {
@@ -25,10 +26,10 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         
         self.physicsBody = SKPhysicsBody(circleOfRadius: 20)
         self.physicsBody!.isDynamic = true
-        self.physicsBody?.affectedByGravity = false
+        self.physicsBody?.affectedByGravity = true
         self.physicsBody?.categoryBitMask = PhysicsCategory.Player
         self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge
-        self.physicsBody?.collisionBitMask = PhysicsCategory.Edge
+        self.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform
     }
     
     func move() {

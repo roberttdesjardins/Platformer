@@ -18,6 +18,7 @@ class GameData {
     let playerSize = CGSize(width: 40, height: 40)
     let playerTexture = SKTexture(imageNamed: "player_idle_frame_0_delay-0.13s")
     let playerHealth = 100
+    let playerAttackDamage = 10
     let playerMoveSpeed = 10
     let playerJumpHeight = 10
     

@@ -13,14 +13,8 @@ class GameScene: SKScene {
     let worldNode = SKNode()
     
     // Background
-//    let sky1 = SKSpriteNode(imageNamed: "sky")
-//    let sky2 = SKSpriteNode(imageNamed: "sky")
     var skyArr: [SKSpriteNode] = []
-//    let clouds1 = SKSpriteNode(imageNamed: "clouds")
-//    let clouds2 = SKSpriteNode(imageNamed: "clouds")
     var cloudsArr: [SKSpriteNode] = []
-//    let sea1 = SKSpriteNode(imageNamed: "sea")
-//    let sea2 = SKSpriteNode(imageNamed: "sea")
     var seaArr: [SKSpriteNode] = []
     
     private var lastUpdateTime : TimeInterval = 0
@@ -30,7 +24,7 @@ class GameScene: SKScene {
         self.lastUpdateTime = 0
         setUpBackground()
         setUpPlayer()
-        //setUpEnvironment()
+        setUpEnvironment()
     }
     
     func setUpBackground() {
@@ -40,19 +34,6 @@ class GameScene: SKScene {
     }
     
     func setUpSky() {
-//        sky1.anchorPoint = CGPoint(x: 0, y: 0)
-//        sky1.position = CGPoint(x: 0, y: 0)
-//        sky1.zPosition = -15
-//        sky1.size.width = size.width
-//        sky1.size.height = size.height
-//        worldNode.addChild(sky1)
-//
-//        sky2.anchorPoint = CGPoint(x: 0, y: 0)
-//        sky2.position = CGPoint(x: sky1.size.width, y: 0)
-//        sky2.zPosition = -15
-//        sky2.size.width = size.width
-//        sky2.size.height = size.height
-//        worldNode.addChild(sky2)
         let skyHeight = size.height
         let skyWidth = skyHeight * 0.3684
         var skyCount = 0
@@ -67,22 +48,10 @@ class GameScene: SKScene {
             skyArr.append(sky)
             skyCount = skyCount + 1
         }
+        print("SkyCount = \(skyCount)")
     }
     
     func setUpClouds() {
-//        clouds1.anchorPoint = CGPoint(x: 0, y: 0)
-//        clouds1.position = CGPoint(x: 0, y: 0)
-//        clouds1.zPosition = -14
-//        clouds1.size.height = size.height * (3/4)
-//        clouds1.size.width = clouds1.size.height * 9.1101
-//        worldNode.addChild(clouds1)
-//
-//        clouds2.anchorPoint = CGPoint(x: 0, y: 0)
-//        clouds2.position = CGPoint(x: clouds1.size.width, y: 0)
-//        clouds2.zPosition = -14
-//        clouds2.size.height = size.height * (3/4)
-//        clouds2.size.width = clouds2.size.height * 9.1101
-//        worldNode.addChild(clouds2)
         let cloudsHeight = size.height * (3/4)
         let cloudsWidth = cloudsHeight * 2.3050
         var cloudsCount = 0
@@ -97,22 +66,10 @@ class GameScene: SKScene {
             cloudsArr.append(cloud)
             cloudsCount = cloudsCount + 1
         }
+        print("cloudsCount = \(cloudsCount)")
     }
     
     func setUpSea() {
-//        sea1.anchorPoint = CGPoint(x: 0, y: 0)
-//        sea1.position = CGPoint(x: 0, y: 0)
-//        sea1.zPosition = -13
-//        sea1.size.height = size.height * (7/24)
-//        sea1.size.width = sea1.size.height * 11.6666
-//        worldNode.addChild(sea1)
-//
-//        sea2.anchorPoint = CGPoint(x: 0, y: 0)
-//        sea2.position = CGPoint(x: sea1.size.width, y: 0)
-//        sea2.zPosition = -13
-//        sea2.size.height = size.height * (7/24)
-//        sea2.size.width = sea2.size.height * 11.6666
-//        worldNode.addChild(sea2)
         let seaHeight = size.height * (7/24)
         let seaWidth = seaHeight * 1.166
         var seaCount = 0
@@ -127,7 +84,7 @@ class GameScene: SKScene {
             seaArr.append(sea)
             seaCount = seaCount + 1
         }
-        
+        print("SeaCount = \(seaCount)")
     }
     
     func setUpPlayer() {
@@ -139,18 +96,20 @@ class GameScene: SKScene {
     
     func setUpEnvironment() {
         // TODO: Chose environment to load from startScene?
-        let platformHeight = size.height/50
-        createPlatform(position: CGPoint(x: size.width/2, y: platformHeight/2), size: CGSize(width: size.width, height: platformHeight))
+        let platformHeight = size.height / 5
+        let platformWidth = platformHeight * 1.28947
+        createPlatform(position: CGPoint(x: size.width/4, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
     }
     
     func createPlatform(position: CGPoint, size: CGSize) {
-        let platform: SKSpriteNode = SKSpriteNode(imageNamed: "")
+        let platform: SKSpriteNode = SKSpriteNode(imageNamed: "platform")
         platform.position = position
         platform.size = size
-        platform.zPosition = 5
+        platform.zPosition = 0
         platform.name = GameData.shared.platformName
         
         platform.physicsBody = SKPhysicsBody(rectangleOf: platform.size)
+        platform.physicsBody?.isDynamic = false
         platform.physicsBody?.affectedByGravity = false
         platform.physicsBody?.categoryBitMask = PhysicsCategory.Platform
         platform.physicsBody?.contactTestBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
@@ -176,8 +135,6 @@ class GameScene: SKScene {
         let dt = currentTime - self.lastUpdateTime
         
         
-        
-        
         self.lastUpdateTime = currentTime
     }
 }
@@ -185,13 +142,25 @@ class GameScene: SKScene {
 // PROTOCOLS
 protocol Entity {
     var health: Int {get set}
+    var isAlive: Bool {get set}
     
     static func uid() -> String
+    mutating func hitTaken()
 }
 
 extension Entity {
     static func uid() -> String {
         return UUID().uuidString
+    }
+    mutating func hitTaken() {
+        if health > 0 {
+            health -= 1
+            if health == 0 {
+                isAlive = false
+            }
+        } else {
+            isAlive = false
+        }
     }
 }
 
@@ -201,6 +170,7 @@ protocol ObjectThatMoves: Entity {
 }
 
 protocol ObjectThatAttacks: Entity {
+    var attackDamage: Int {get set}
     func attack()
 }
 
