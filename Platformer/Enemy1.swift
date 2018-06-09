@@ -10,6 +10,8 @@ import Foundation
 import SpriteKit
 
 class Enemy1 : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks {
+    var attackDamage: Int = GameData.shared.enemy1AttackDamage
+    
     var isAlive: Bool = true
     
     var moveSpeed: Int = GameData.shared.enemy1MoveSpeed

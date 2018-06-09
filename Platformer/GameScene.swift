@@ -12,6 +12,8 @@ import GameplayKit
 class GameScene: SKScene {
     let worldNode = SKNode()
     
+    var platformArr: [SKSpriteNode] = []
+    
     // Background
     var skyArr: [SKSpriteNode] = []
     var cloudsArr: [SKSpriteNode] = []
@@ -108,18 +110,32 @@ class GameScene: SKScene {
         platform.zPosition = 0
         platform.name = GameData.shared.platformName
         
-        platform.physicsBody = SKPhysicsBody(rectangleOf: platform.size)
+        platform.physicsBody = SKPhysicsBody(rectangleOf: platform.size - CGSize(width: 0, height: 10))
         platform.physicsBody?.isDynamic = false
         platform.physicsBody?.affectedByGravity = false
         platform.physicsBody?.categoryBitMask = PhysicsCategory.Platform
         platform.physicsBody?.contactTestBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
         platform.physicsBody?.collisionBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
         worldNode.addChild(platform)
+        platformArr.append(platform)
     }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // TODO: If player is touching a platform, preform a jump
+        if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
+            print("Testing for platform")
+            for platform in platformArr {
+                print ("Found a platform")
+                if (player.physicsBody?.allContactedBodies().contains(platform.physicsBody!))! {
+                    player.jump()
+                }
+            }
+            
+        }
     }
+    
+    
     
     
     
@@ -178,11 +194,3 @@ protocol ObjectThatJumps: Entity{
     var jumpHeight: Int {get set}
     func jump()
 }
-
-
-
-
-
-
-
-

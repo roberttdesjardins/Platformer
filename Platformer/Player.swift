@@ -27,6 +27,8 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         self.physicsBody = SKPhysicsBody(circleOfRadius: 20)
         self.physicsBody!.isDynamic = true
         self.physicsBody?.affectedByGravity = true
+        self.physicsBody?.restitution = 0.0
+        self.physicsBody?.friction = 0.0
         self.physicsBody?.categoryBitMask = PhysicsCategory.Player
         self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge
         self.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform
@@ -42,7 +44,7 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
     }
     
     func jump() {
-        
+        self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpHeight))
     }
     
     func playerIdleAnim(player: Player) {
@@ -61,6 +63,10 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
             gifRunning.append(SKTexture(imageNamed: "player_running_frame_\(i)_delay-0.07s"))
         }
         player.run(SKAction.repeatForever(SKAction.animate(with: gifRunning, timePerFrame: 0.07)))
+    }
+    
+    func playerJumpAnim(player: Player) {
+        
     }
     
 }
