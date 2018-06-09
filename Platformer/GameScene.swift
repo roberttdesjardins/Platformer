@@ -57,7 +57,7 @@ class GameScene: SKScene {
         let cloudsHeight = size.height * (3/4)
         let cloudsWidth = cloudsHeight * 2.3050
         var cloudsCount = 0
-        while CGFloat(cloudsArr.count) * cloudsWidth < size.width * 1.5 {
+        while CGFloat(cloudsArr.count) * cloudsWidth < size.width * 2.0 {
             let cloud = SKSpriteNode(imageNamed: "clouds")
             cloud.anchorPoint = CGPoint(x: 0, y: 0)
             cloud.position = CGPoint(x: cloudsCount * Int(cloudsWidth), y: 0)
@@ -120,9 +120,31 @@ class GameScene: SKScene {
         platformArr.append(platform)
     }
     
+    func updateBackground() {
+        for sky in skyArr {
+            sky.position = CGPoint(x: sky.position.x - 0.2, y: sky.position.y)
+            if sky.position.x <= -sky.size.width {
+                sky.position.x = skyArr[ (skyArr.index(of: sky)! + skyArr.count - 1) % skyArr.count].position.x + sky.size.width - 1
+            }
+        }
+        
+        for clouds in cloudsArr {
+            clouds.position = CGPoint(x: clouds.position.x - 0.5, y: clouds.position.y)
+            if clouds.position.x <= -clouds.size.width {
+                clouds.position.x = cloudsArr[ (cloudsArr.index(of: clouds)! + cloudsArr.count - 1) % cloudsArr.count].position.x + clouds.size.width - 1
+            }
+        }
+        
+        for sea in seaArr {
+            sea.position = CGPoint(x: sea.position.x - 0.3, y: sea.position.y)
+            if sea.position.x <= -sea.size.width {
+                sea.position.x = seaArr[ (seaArr.index(of: sea)! + seaArr.count - 1) % seaArr.count].position.x + sea.size.width - 1
+            }
+        }
+    }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        // TODO: If player is touching a platform, preform a jump
         if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
             print("Testing for platform")
             for platform in platformArr {
@@ -150,6 +172,7 @@ class GameScene: SKScene {
         // Calculate time since last update
         let dt = currentTime - self.lastUpdateTime
         
+        updateBackground()
         
         self.lastUpdateTime = currentTime
     }
