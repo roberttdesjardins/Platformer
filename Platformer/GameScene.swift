@@ -121,24 +121,34 @@ class GameScene: SKScene {
     }
     
     func updateBackground() {
-        for sky in skyArr {
-            sky.position = CGPoint(x: sky.position.x - 0.2, y: sky.position.y)
-            if sky.position.x <= -sky.size.width {
-                sky.position.x = skyArr[ (skyArr.index(of: sky)! + skyArr.count - 1) % skyArr.count].position.x + sky.size.width - 1
+        moveAlong(array: skyArr, speed: 0.2)
+        moveAlong(array: cloudsArr, speed: 0.5)
+        moveAlong(array: seaArr, speed: 0.3)
+    }
+    
+    func updateForeground() {
+        // TODO
+        //moveAlong(array: platformArr, speed: 1)
+        moveAlongAndRemove(array: &platformArr, speed: 1)
+    }
+    
+    func moveAlong(array: [SKSpriteNode], speed: CGFloat) {
+        for element in array {
+            element.position = CGPoint(x: element.position.x - speed, y: element.position.y)
+            if element.position.x <= -element.size.width {
+                element.position.x = array[ (array.index(of: element)! + array.count - 1) % array.count].position.x + element.size.width - 1
             }
         }
-        
-        for clouds in cloudsArr {
-            clouds.position = CGPoint(x: clouds.position.x - 0.5, y: clouds.position.y)
-            if clouds.position.x <= -clouds.size.width {
-                clouds.position.x = cloudsArr[ (cloudsArr.index(of: clouds)! + cloudsArr.count - 1) % cloudsArr.count].position.x + clouds.size.width - 1
-            }
-        }
-        
-        for sea in seaArr {
-            sea.position = CGPoint(x: sea.position.x - 0.3, y: sea.position.y)
-            if sea.position.x <= -sea.size.width {
-                sea.position.x = seaArr[ (seaArr.index(of: sea)! + seaArr.count - 1) % seaArr.count].position.x + sea.size.width - 1
+    }
+    
+    func moveAlongAndRemove(array: inout [SKSpriteNode], speed: CGFloat) {
+        for element in array {
+            element.position = CGPoint(x: element.position.x - speed, y: element.position.y)
+            if element.position.x <= -element.size.width {
+                if let index = array.index(of: element) {
+                    array.remove(at: index)
+                }
+                element.removeFromParent()
             }
         }
     }
@@ -146,9 +156,7 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
-            print("Testing for platform")
             for platform in platformArr {
-                print ("Found a platform")
                 if (player.physicsBody?.allContactedBodies().contains(platform.physicsBody!))! {
                     player.jump()
                 }
@@ -173,6 +181,7 @@ class GameScene: SKScene {
         let dt = currentTime - self.lastUpdateTime
         
         updateBackground()
+        updateForeground()
         
         self.lastUpdateTime = currentTime
     }
