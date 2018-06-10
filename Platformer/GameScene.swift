@@ -101,6 +101,14 @@ class GameScene: SKScene {
         let platformHeight = size.height / 5
         let platformWidth = platformHeight * 1.28947
         createPlatform(position: CGPoint(x: size.width/4, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 2, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3.5, y: platformHeight), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4, y: platformHeight * 2), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4.5, y: platformHeight * 3), size: CGSize(width: platformWidth, height: platformHeight))
+        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 5, y: platformHeight * 4.5), size: CGSize(width: platformWidth, height: platformHeight))
+        
     }
     
     func createPlatform(position: CGPoint, size: CGSize) {
@@ -110,7 +118,8 @@ class GameScene: SKScene {
         platform.zPosition = 0
         platform.name = GameData.shared.platformName
         
-        platform.physicsBody = SKPhysicsBody(rectangleOf: platform.size - CGSize(width: 0, height: 10))
+
+        platform.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: -platform.size.width/2, y: platform.size.height/2 - 10), to: CGPoint(x: platform.size.width/2, y: platform.size.height/2 - 10))
         platform.physicsBody?.isDynamic = false
         platform.physicsBody?.affectedByGravity = false
         platform.physicsBody?.categoryBitMask = PhysicsCategory.Platform
@@ -127,9 +136,7 @@ class GameScene: SKScene {
     }
     
     func updateForeground() {
-        // TODO
-        //moveAlong(array: platformArr, speed: 1)
-        moveAlongAndRemove(array: &platformArr, speed: 1)
+        moveAlongAndRemove(array: &platformArr, speed: 2)
     }
     
     func moveAlong(array: [SKSpriteNode], speed: CGFloat) {
@@ -153,19 +160,46 @@ class GameScene: SKScene {
         }
     }
     
+    func updatePlayerCollisionBitMask() {
+        if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
+            if let playerDY = player.physicsBody?.velocity.dy {
+                if playerDY > CGFloat(0) {
+                    player.physicsBody?.collisionBitMask &= ~PhysicsCategory.Platform
+                } else {
+                    player.physicsBody?.collisionBitMask |= PhysicsCategory.Platform
+                }
+            }
+        }
+    }
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
             for platform in platformArr {
                 if (player.physicsBody?.allContactedBodies().contains(platform.physicsBody!))! {
                     player.jump()
+                    return
                 }
             }
             
         }
     }
     
+    func didBegin(_ contact: SKPhysicsContact) {
+        guard let nodeA = contact.bodyA.node else { return }
+        guard let nodeB = contact.bodyB.node else { return }
+        if nodeA.name == GameData.shared.playerName {
+            collisionBetween(ob1: nodeA, ob2: nodeB)
+        } else if nodeB.name == GameData.shared.playerName {
+            collisionBetween(ob1: nodeB, ob2: nodeA)
+        }
+    }
     
+    func collisionBetween(ob1: SKNode, ob2: SKNode) {
+        if ob1.name == GameData.shared.playerName && ob2.name == GameData.shared.platformName {
+            
+        }
+    }
     
     
     
@@ -182,6 +216,7 @@ class GameScene: SKScene {
         
         updateBackground()
         updateForeground()
+        updatePlayerCollisionBitMask()
         
         self.lastUpdateTime = currentTime
     }

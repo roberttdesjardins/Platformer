@@ -30,7 +30,7 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         self.physicsBody?.restitution = 0.0
         self.physicsBody?.friction = 0.0
         self.physicsBody?.categoryBitMask = PhysicsCategory.Player
-        self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge
+        self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform 
         self.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform
     }
     
