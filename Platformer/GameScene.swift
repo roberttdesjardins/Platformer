@@ -8,11 +8,17 @@
 
 import SpriteKit
 import GameplayKit
-//import CoreMotion
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let worldNode = SKNode()
     
+    var creatingFloatingPlatform = false
+    var floatingPlatformHeight: CGFloat = 0
+    var floatingPlatformWidth: CGFloat = 0
+    let floatingPlatformMinTime:Double = 0.6
+    let floatingPlatformMaxTime:Double = 4.0
+    var floatingPlatformTimer:TimeInterval = 0
+    var floatingPlatformInterval:TimeInterval = 2
     var platformArr: [SKSpriteNode] = []
     
     // Background
@@ -26,6 +32,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(worldNode)
         physicsWorld.contactDelegate = self
         self.lastUpdateTime = 0
+        floatingPlatformHeight = size.height / 5
+        floatingPlatformWidth = floatingPlatformHeight * 1.28947
         setUpBackground()
         setUpPlayer()
         setUpEnvironment()
@@ -99,20 +107,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setUpEnvironment() {
         // TODO: Chose environment to load from startScene?
-        let platformHeight = size.height / 5
-        let platformWidth = platformHeight * 1.28947
-        createMediumPlatform(position: CGPoint(x: size.width/4, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 2, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3.5, y: platformHeight), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4, y: platformHeight * 2), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4.5, y: platformHeight * 3), size: CGSize(width: platformWidth, height: platformHeight))
-        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 5, y: platformHeight * 4.5), size: CGSize(width: platformWidth, height: platformHeight))
+        creatingFloatingPlatform = true
         
     }
     
-    func createMediumPlatform(position: CGPoint, size: CGSize) {
+    
+    func createFloatingPlatform(position: CGPoint, size: CGSize) {
         let platform: SKSpriteNode = SKSpriteNode(imageNamed: "platform")
         platform.position = position
         platform.size = size
@@ -122,6 +122,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         platform.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: -platform.size.width/2, y: platform.size.height/2 - 10), to: CGPoint(x: platform.size.width/2, y: platform.size.height/2 - 10))
         platform.physicsBody?.isDynamic = false
         platform.physicsBody?.affectedByGravity = false
+        platform.physicsBody?.restitution = 0.0
         platform.physicsBody?.categoryBitMask = PhysicsCategory.Platform
         platform.physicsBody?.contactTestBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
         platform.physicsBody?.collisionBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
@@ -215,7 +216,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // Calculate time since last update
-        //let dt = currentTime - self.lastUpdateTime
+        let dt = currentTime - self.lastUpdateTime
+        
+        floatingPlatformTimer -= dt
+        
+        if creatingFloatingPlatform && floatingPlatformTimer <= 0 {
+            
+            let randomY = random(min: size.height/4, max: size.height - floatingPlatformHeight)
+            createFloatingPlatform(position: CGPoint(x: self.size.width + floatingPlatformWidth, y: randomY), size: CGSize(width: floatingPlatformWidth, height: floatingPlatformHeight))
+            
+            floatingPlatformInterval = random(min: floatingPlatformMinTime, max: floatingPlatformMaxTime)
+            floatingPlatformTimer = floatingPlatformInterval
+        }
         
         updateBackground()
         updateForeground()

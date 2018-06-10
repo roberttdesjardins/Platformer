@@ -78,11 +78,6 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
             gifJumping.append(SKTexture(imageNamed: "player_jumping_frame_\(i)_delay-0.1s"))
         }
         player.run(SKAction.animate(with: gifJumping, timePerFrame: 0.1))
-//        let playerJumpingAction = SKAction.animate(with: gifJumping, timePerFrame: 0.1)
-//        let playerFinishedJumping = SKAction.run {
-//            player.texture = SKTexture(imageNamed: "player_jumping_frame_4_delay-0.1s")
-//        }
-//        player.run(SKAction.sequence([playerJumpingAction, playerFinishedJumping]))
     }
     
 }

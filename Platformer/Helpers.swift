@@ -28,3 +28,15 @@ func / (point: CGPoint, scalar: CGFloat) -> CGPoint {
 func - (left: CGSize, right: CGSize) -> CGSize {
     return CGSize(width: left.width - right.width, height: left.height - right.height)
 }
+
+func random() -> CGFloat {
+    return CGFloat(Float(arc4random()) / 0xFFFFFFFF)
+}
+
+func random(min: CGFloat, max: CGFloat) -> CGFloat {
+    return random() * (max - min) + min
+}
+
+func random(min: Double, max: Double) -> Double {
+    return Double(random()) * (max - min) + min
+}
