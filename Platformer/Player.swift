@@ -44,7 +44,9 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
     }
     
     func jump() {
+        self.physicsBody?.velocity.dy = 0
         self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpHeight))
+        playerJumpAnim(player: self)
     }
     
     func playerIdleAnim(player: Player) {
@@ -53,20 +55,34 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         for i in 0...3 {
             gifIdle.append(SKTexture(imageNamed: "player_idle_frame_\(i)_delay-0.13s"))
         }
-        player.run(SKAction.repeatForever(SKAction.animate(with: gifIdle, timePerFrame: 0.13)))
+        player.run(SKAction.repeatForever(SKAction.animate(with: gifIdle, timePerFrame: 0.13)), withKey: "playerIdle")
     }
     
     func playerRunningAnim(player: Player) {
         player.size.width = 66
+        player.size.height = 48
         var gifRunning: [SKTexture] = []
         for i in 0...11 {
             gifRunning.append(SKTexture(imageNamed: "player_running_frame_\(i)_delay-0.07s"))
         }
-        player.run(SKAction.repeatForever(SKAction.animate(with: gifRunning, timePerFrame: 0.07)))
+        player.run(SKAction.repeatForever(SKAction.animate(with: gifRunning, timePerFrame: 0.07)), withKey: "playerRunning")
     }
     
     func playerJumpAnim(player: Player) {
-        
+        player.removeAction(forKey: "playerRunning")
+        player.removeAction(forKey: "playerIdle")
+        player.size.width = 61
+        player.size.height = 77
+        var gifJumping: [SKTexture] = []
+        for i in 0...4 {
+            gifJumping.append(SKTexture(imageNamed: "player_jumping_frame_\(i)_delay-0.1s"))
+        }
+        player.run(SKAction.animate(with: gifJumping, timePerFrame: 0.1))
+//        let playerJumpingAction = SKAction.animate(with: gifJumping, timePerFrame: 0.1)
+//        let playerFinishedJumping = SKAction.run {
+//            player.texture = SKTexture(imageNamed: "player_jumping_frame_4_delay-0.1s")
+//        }
+//        player.run(SKAction.sequence([playerJumpingAction, playerFinishedJumping]))
     }
     
 }

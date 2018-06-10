@@ -8,8 +8,9 @@
 
 import SpriteKit
 import GameplayKit
+//import CoreMotion
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     let worldNode = SKNode()
     
     var platformArr: [SKSpriteNode] = []
@@ -23,6 +24,7 @@ class GameScene: SKScene {
     
     override func sceneDidLoad() {
         addChild(worldNode)
+        physicsWorld.contactDelegate = self
         self.lastUpdateTime = 0
         setUpBackground()
         setUpPlayer()
@@ -50,7 +52,6 @@ class GameScene: SKScene {
             skyArr.append(sky)
             skyCount = skyCount + 1
         }
-        print("SkyCount = \(skyCount)")
     }
     
     func setUpClouds() {
@@ -68,7 +69,6 @@ class GameScene: SKScene {
             cloudsArr.append(cloud)
             cloudsCount = cloudsCount + 1
         }
-        print("cloudsCount = \(cloudsCount)")
     }
     
     func setUpSea() {
@@ -86,13 +86,14 @@ class GameScene: SKScene {
             seaArr.append(sea)
             seaCount = seaCount + 1
         }
-        print("SeaCount = \(seaCount)")
     }
     
     func setUpPlayer() {
         let player:Player = Player()
         player.initPlayer()
         player.position = CGPoint(x: size.width * (1/4), y: size.height * (1/3))
+        let xConstraint = SKConstraint.positionX(SKRange(constantValue: player.position.x))
+        player.constraints = [xConstraint]
         worldNode.addChild(player)
     }
     
@@ -100,25 +101,24 @@ class GameScene: SKScene {
         // TODO: Chose environment to load from startScene?
         let platformHeight = size.height / 5
         let platformWidth = platformHeight * 1.28947
-        createPlatform(position: CGPoint(x: size.width/4, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 2, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3.5, y: platformHeight), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4, y: platformHeight * 2), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4.5, y: platformHeight * 3), size: CGSize(width: platformWidth, height: platformHeight))
-        createPlatform(position: CGPoint(x: size.width/4 + platformWidth * 5, y: platformHeight * 4.5), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 2, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3, y: platformHeight/2), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 3.5, y: platformHeight), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4, y: platformHeight * 2), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 4.5, y: platformHeight * 3), size: CGSize(width: platformWidth, height: platformHeight))
+        createMediumPlatform(position: CGPoint(x: size.width/4 + platformWidth * 5, y: platformHeight * 4.5), size: CGSize(width: platformWidth, height: platformHeight))
         
     }
     
-    func createPlatform(position: CGPoint, size: CGSize) {
+    func createMediumPlatform(position: CGPoint, size: CGSize) {
         let platform: SKSpriteNode = SKSpriteNode(imageNamed: "platform")
         platform.position = position
         platform.size = size
         platform.zPosition = 0
         platform.name = GameData.shared.platformName
         
-
         platform.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: -platform.size.width/2, y: platform.size.height/2 - 10), to: CGPoint(x: platform.size.width/2, y: platform.size.height/2 - 10))
         platform.physicsBody?.isDynamic = false
         platform.physicsBody?.affectedByGravity = false
@@ -197,7 +197,10 @@ class GameScene: SKScene {
     
     func collisionBetween(ob1: SKNode, ob2: SKNode) {
         if ob1.name == GameData.shared.playerName && ob2.name == GameData.shared.platformName {
-            
+            if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
+                print("Player collided with platform")
+                player.playerRunningAnim(player: player)
+            }
         }
     }
     
@@ -212,7 +215,7 @@ class GameScene: SKScene {
         }
         
         // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
+        //let dt = currentTime - self.lastUpdateTime
         
         updateBackground()
         updateForeground()

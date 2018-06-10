@@ -20,7 +20,8 @@ class GameData {
     let playerHealth = 100
     let playerAttackDamage = 10
     let playerMoveSpeed = 10
-    let playerJumpHeight = 28
+    //let playerJumpHeight = 28
+    let playerJumpHeight = 50
     
     let platformName = "platform"
     
