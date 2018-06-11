@@ -9,10 +9,9 @@
 import Foundation
 import SpriteKit
 
-class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectThatJumps {
+class Player : SKSpriteNode, Entity, ObjectThatAttacks, ObjectThatJumps {
     var isAlive = true
     var jumpHeight: Int = GameData.shared.playerJumpHeight
-    var moveSpeed: Int = GameData.shared.playerMoveSpeed
     var health: Int = GameData.shared.playerHealth
     var attackDamage: Int = GameData.shared.playerAttackDamage
     
@@ -34,11 +33,6 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         self.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform
     }
     
-    func move() {
-        // TODO
-        // TODO: Call playerRunningAnim
-    }
-    
     func attack() {
         // TODO
     }
@@ -48,6 +42,7 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: jumpHeight))
         playerJumpAnim(player: self)
     }
+    
     
     func playerIdleAnim(player: Player) {
         player.size.width = 38
@@ -77,7 +72,7 @@ class Player : SKSpriteNode, Entity, ObjectThatMoves, ObjectThatAttacks, ObjectT
         for i in 0...4 {
             gifJumping.append(SKTexture(imageNamed: "player_jumping_frame_\(i)_delay-0.1s"))
         }
-        player.run(SKAction.animate(with: gifJumping, timePerFrame: 0.1))
+        player.run(SKAction.animate(with: gifJumping, timePerFrame: 0.1), withKey: "playerJumping")
     }
     
 }

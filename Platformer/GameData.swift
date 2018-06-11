@@ -21,7 +21,8 @@ class GameData {
     let playerAttackDamage = 10
     let playerMoveSpeed = 10
     //let playerJumpHeight = 28
-    let playerJumpHeight = 50
+    let playerJumpHeight = 20
+    let playerJumpHolding: CGFloat = 3
     
     let platformName = "platform"
     

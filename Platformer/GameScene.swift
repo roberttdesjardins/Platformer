@@ -6,20 +6,30 @@
 //  Copyright © 2018 Robert Desjardins. All rights reserved.
 //
 
+// TODO: Added touches holding so that the player can control how high he jumps based on how long he presses
+//       Once he lets go, the player will not be able to press screen again to add jump height until the player touches down again
+//       Will need to add a bool to keep track of player jumping
+//       The longer the player holds, the less and less impulse will be added to the player jump
+
 import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     let worldNode = SKNode()
     
+    // floatingPlatform
     var creatingFloatingPlatform = false
     var floatingPlatformHeight: CGFloat = 0
     var floatingPlatformWidth: CGFloat = 0
-    let floatingPlatformMinTime:Double = 0.6
-    let floatingPlatformMaxTime:Double = 4.0
+    let floatingPlatformMinTime:Double = 0.2
+    let floatingPlatformMaxTime:Double = 2.0
     var floatingPlatformTimer:TimeInterval = 0
     var floatingPlatformInterval:TimeInterval = 2
     var platformArr: [SKSpriteNode] = []
+    
+    // Player jumping variables
+    var isHoldingJump = false
+    var holdingImpulse = GameData.shared.playerJumpHolding
     
     // Background
     var skyArr: [SKSpriteNode] = []
@@ -108,7 +118,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setUpEnvironment() {
         // TODO: Chose environment to load from startScene?
         creatingFloatingPlatform = true
-        
+        // TODO: Remove
+        createFloatingPlatform(position: CGPoint(x: 0, y: 0), size: CGSize(width: size.width * 100, height: 20))
     }
     
     
@@ -137,7 +148,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateForeground() {
-        moveAlongAndRemove(array: &platformArr, speed: 2)
+        moveAlongAndRemove(array: &platformArr, speed: 4)
     }
     
     func moveAlong(array: [SKSpriteNode], speed: CGFloat) {
@@ -173,16 +184,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    func updatePlayerJump() {
+        if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
+            let impulse = max(holdingImpulse, 0)
+            player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: impulse))
+            print("impulse = \(impulse)")
+            holdingImpulse -= 0.1
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isHoldingJump = false
+        holdingImpulse = GameData.shared.playerJumpHolding
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        isHoldingJump = false
+        holdingImpulse = GameData.shared.playerJumpHolding
+    }
+
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
             for platform in platformArr {
                 if (player.physicsBody?.allContactedBodies().contains(platform.physicsBody!))! {
                     player.jump()
+                    isHoldingJump = true
                     return
                 }
             }
-            
         }
     }
     
@@ -200,6 +231,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if ob1.name == GameData.shared.playerName && ob2.name == GameData.shared.platformName {
             if let player = worldNode.childNode(withName: GameData.shared.playerName) as? Player {
                 print("Player collided with platform")
+                isHoldingJump = false
                 player.playerRunningAnim(player: player)
             }
         }
@@ -227,6 +259,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             floatingPlatformInterval = random(min: floatingPlatformMinTime, max: floatingPlatformMaxTime)
             floatingPlatformTimer = floatingPlatformInterval
+        }
+        
+        if isHoldingJump {
+            updatePlayerJump()
         }
         
         updateBackground()
