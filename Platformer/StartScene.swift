@@ -11,7 +11,6 @@ import SpriteKit
 
 class StartScene: SKScene {
     var background = SKSpriteNode()
-    var startButton: SKSpriteNode! = nil
     
     override func didMove(to view: SKView) {
         createBackground()
@@ -20,7 +19,7 @@ class StartScene: SKScene {
     
     
     func createBackground() {
-        background = SKSpriteNode(imageNamed: "") // TODO
+        background = SKSpriteNode(imageNamed: "sky") // TODO
         background.zPosition = 1
         background.size = CGSize(width: frame.size.width, height: frame.size.height)
         background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
@@ -28,23 +27,27 @@ class StartScene: SKScene {
     }
     
     func createUI() {
-        createStartButton(width: <#T##CGFloat#>, height: <#T##CGFloat#>)
+        createStartButton(width: frame.size.width/2, height: frame.size.height/2)
     }
     
     func createStartButton(width: CGFloat, height: CGFloat) {
-        startButton = SKSpriteNode(imageNamed: "") // TODO
+        backgroundColor = SKColor.white
+        let buttonTexture: SKTexture! = SKTexture(imageNamed: "ButtonNotPressed")
+        let buttonTextureSelected: SKTexture! = SKTexture(imageNamed: "ButtonPressed")
+        //TODO: Put in disabled texture
+        let startButton = FTButtonNode(normalTexture: buttonTexture, selectedTexture: buttonTextureSelected, disabledTexture: buttonTexture)
+        startButton.setButtonAction(target: self, triggerEvent: .TouchUpInside, action: #selector(StartScene.startButtonTap))
+        startButton.setButtonLabel(title: "Start!", font: "Arial", fontSize: 12)
+        startButton.position = CGPoint(x: self.frame.midX,y: self.frame.midY)
         startButton.zPosition = 2
-        startButton.size = CGSize(width: width, height: height)
-        addChild(startButton)
+        startButton.name = "StartButton"
+        self.addChild(startButton)
+    }
+    
+    @objc func startButtonTap() {
+        playButtonPress()
+        gameSceneLoad(view: view!)
     }
     
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let touch = touches.first
-        let touchLocation = touch!.location(in: self)
-        if startButton.contains(touchLocation) {
-            playButtonPress()
-            gameSceneLoad(view: view!)
-        }
-    }
 }
