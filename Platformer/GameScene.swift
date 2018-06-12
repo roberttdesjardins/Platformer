@@ -22,7 +22,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var floatingPlatformHeight: CGFloat = 0
     var floatingPlatformWidth: CGFloat = 0
     let floatingPlatformMinTime:Double = 0.2
-    let floatingPlatformMaxTime:Double = 2.0
+    let floatingPlatformMaxTime:Double = 1.2
     var floatingPlatformTimer:TimeInterval = 0
     var floatingPlatformInterval:TimeInterval = 2
     var platformArr: [SKSpriteNode] = []
@@ -42,11 +42,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(worldNode)
         physicsWorld.contactDelegate = self
         self.lastUpdateTime = 0
-        floatingPlatformHeight = size.height / 5
+        floatingPlatformHeight = GameData.shared.deviceHeight / 5
         floatingPlatformWidth = floatingPlatformHeight * 1.28947
+        //createScreen()
         setUpBackground()
         setUpPlayer()
         setUpEnvironment()
+    }
+    
+    func createScreen() {
+        scene?.scaleMode = SKSceneScaleMode.resizeFill
+        backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        self.physicsBody!.categoryBitMask = PhysicsCategory.Edge
+        self.physicsBody?.contactTestBitMask = PhysicsCategory.Player
     }
     
     func setUpBackground() {
@@ -56,10 +65,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setUpSky() {
-        let skyHeight = size.height
+        let skyHeight = GameData.shared.deviceHeight
         let skyWidth = skyHeight * 0.3684
         var skyCount = 0
-        while CGFloat(skyArr.count) * skyWidth < size.width * 1.5 {
+        while CGFloat(skyArr.count) * skyWidth < GameData.shared.deviceWidth * 1.5 {
             let sky = SKSpriteNode(imageNamed: "sky")
             sky.anchorPoint = CGPoint(x: 0, y: 0)
             sky.position = CGPoint(x: skyCount * Int(skyWidth), y: 0)
@@ -73,10 +82,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setUpClouds() {
-        let cloudsHeight = size.height * (3/4)
+        let cloudsHeight = GameData.shared.deviceHeight * (3/4)
         let cloudsWidth = cloudsHeight * 2.3050
         var cloudsCount = 0
-        while CGFloat(cloudsArr.count) * cloudsWidth < size.width * 2.0 {
+        while CGFloat(cloudsArr.count) * cloudsWidth < GameData.shared.deviceWidth * 2.0 {
             let cloud = SKSpriteNode(imageNamed: "clouds")
             cloud.anchorPoint = CGPoint(x: 0, y: 0)
             cloud.position = CGPoint(x: cloudsCount * Int(cloudsWidth), y: 0)
@@ -90,10 +99,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setUpSea() {
-        let seaHeight = size.height * (7/24)
+        let seaHeight = GameData.shared.deviceHeight * (7/24)
         let seaWidth = seaHeight * 1.166
         var seaCount = 0
-        while CGFloat(seaArr.count) * seaWidth < size.width * 1.5 {
+        while CGFloat(seaArr.count) * seaWidth < GameData.shared.deviceWidth * 1.5 {
             let sea = SKSpriteNode(imageNamed: "sea")
             sea.anchorPoint = CGPoint(x: 0, y: 0)
             sea.position = CGPoint(x: seaCount * Int(seaWidth), y: 0)
@@ -109,7 +118,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setUpPlayer() {
         let player:Player = Player()
         player.initPlayer()
-        player.position = CGPoint(x: size.width * (1/4), y: size.height * (1/3))
+        player.position = CGPoint(x: GameData.shared.deviceWidth * (1/4), y: GameData.shared.deviceHeight * (1/3))
         let xConstraint = SKConstraint.positionX(SKRange(constantValue: player.position.x))
         player.constraints = [xConstraint]
         worldNode.addChild(player)
@@ -119,7 +128,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // TODO: Chose environment to load from startScene?
         creatingFloatingPlatform = true
         // TODO: Remove
-        createFloatingPlatform(position: CGPoint(x: 0, y: 0), size: CGSize(width: size.width * 100, height: 20))
+        createFloatingPlatform(position: CGPoint(x: 0, y: 0), size: CGSize(width: GameData.shared.deviceWidth * 100, height: 20))
     }
     
     
@@ -148,7 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateForeground() {
-        moveAlongAndRemove(array: &platformArr, speed: 4)
+        moveAlongAndRemove(array: &platformArr, speed: 6)
     }
     
     func moveAlong(array: [SKSpriteNode], speed: CGFloat) {
@@ -254,8 +263,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if creatingFloatingPlatform && floatingPlatformTimer <= 0 {
             
-            let randomY = random(min: size.height/4, max: size.height - floatingPlatformHeight)
-            createFloatingPlatform(position: CGPoint(x: self.size.width + floatingPlatformWidth, y: randomY), size: CGSize(width: floatingPlatformWidth, height: floatingPlatformHeight))
+            let randomY = random(min: GameData.shared.deviceHeight/4, max: GameData.shared.deviceHeight - floatingPlatformHeight)
+            createFloatingPlatform(position: CGPoint(x: GameData.shared.deviceWidth + floatingPlatformWidth, y: randomY), size: CGSize(width: floatingPlatformWidth, height: floatingPlatformHeight))
             
             floatingPlatformInterval = random(min: floatingPlatformMinTime, max: floatingPlatformMaxTime)
             floatingPlatformTimer = floatingPlatformInterval

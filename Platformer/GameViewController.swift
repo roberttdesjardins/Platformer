@@ -14,17 +14,19 @@ class GameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let value = UIInterfaceOrientation.landscapeLeft.rawValue
+        UIDevice.current.setValue(value, forKey: "orientation")
         
-        let scene = GameScene(size: view.bounds.size)
+        let scene = StartScene(size: view.bounds.size)
         let skView = view as! SKView
         skView.ignoresSiblingOrder = true
         scene.scaleMode = .aspectFill
         skView.presentScene(scene)
     }
     
-    override var shouldAutorotate: Bool {
-        return true
-    }
+//    override var shouldAutorotate: Bool {
+//        return true
+//    }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .landscape

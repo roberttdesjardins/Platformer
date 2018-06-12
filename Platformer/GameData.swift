@@ -14,6 +14,9 @@ import GameplayKit
 class GameData {
     static let shared = GameData()
     
+    var deviceWidth = UIScreen.main.bounds.size.width
+    var deviceHeight = UIScreen.main.bounds.size.height
+    
     let playerName = "player"
     let playerSize = CGSize(width: 40, height: 40)
     let playerTexture = SKTexture(imageNamed: "player_idle_frame_0_delay-0.13s")
@@ -22,7 +25,7 @@ class GameData {
     let playerMoveSpeed = 10
     //let playerJumpHeight = 28
     let playerJumpHeight = 20
-    let playerJumpHolding: CGFloat = 3
+    let playerJumpHolding: CGFloat = 2.8
     
     let platformName = "platform"
     
