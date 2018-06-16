@@ -4,12 +4,7 @@
 //
 //  Created by Robert Desjardins on 2018-06-06.
 //  Copyright © 2018 Robert Desjardins. All rights reserved.
-//
 
-// TODO: Added touches holding so that the player can control how high he jumps based on how long he presses
-//       Once he lets go, the player will not be able to press screen again to add jump height until the player touches down again
-//       Will need to add a bool to keep track of player jumping
-//       The longer the player holds, the less and less impulse will be added to the player jump
 
 import SpriteKit
 import GameplayKit
@@ -26,6 +21,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var floatingPlatformTimer:TimeInterval = 0
     var floatingPlatformInterval:TimeInterval = 2
     var platformArr: [SKSpriteNode] = []
+    
+    // Cannon
+    var cannonHeight: CGFloat = 0
+    var cannonWidth: CGFloat = 0
+    let cannonMinTime: Double = 2
+    let cannonMaxTime: Double = 4.5
+    var cannonTimer: TimeInterval = 20
+    var cannonInterval: TimeInterval = 4
+    
     
     // Player jumping variables
     var isHoldingJump = false
@@ -44,6 +48,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.lastUpdateTime = 0
         floatingPlatformHeight = GameData.shared.deviceHeight / 5
         floatingPlatformWidth = floatingPlatformHeight * 1.28947
+        cannonHeight = GameData.shared.deviceHeight / 4
+        cannonWidth = cannonHeight * 1  //TODO get actual ratio
         //createScreen()
         setUpBackground()
         setUpPlayer()
@@ -148,6 +154,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         platform.physicsBody?.collisionBitMask = PhysicsCategory.Player | PhysicsCategory.Enemy
         worldNode.addChild(platform)
         platformArr.append(platform)
+    }
+    
+    func createCannon(position: CGPoint, size: CGSize) {
+        let cannon: Cannon = Cannon(imageNamed: "cannon")
+        cannon.position = position
+        cannon.size = size
+        cannon.zPosition = -1
+        cannon.name = GameData.shared.cannonName
+        
+        worldNode.addChild(cannon)
     }
     
     func updateBackground() {
@@ -260,6 +276,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let dt = currentTime - self.lastUpdateTime
         
         floatingPlatformTimer -= dt
+        cannonTimer -= dt
+        
         
         if creatingFloatingPlatform && floatingPlatformTimer <= 0 {
             
@@ -268,6 +286,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             floatingPlatformInterval = random(min: floatingPlatformMinTime, max: floatingPlatformMaxTime)
             floatingPlatformTimer = floatingPlatformInterval
+        }
+        
+        if cannonTimer <= 0 {
+            let randomY = random(min: cannonHeight/2, max: GameData.shared.deviceHeight - cannonHeight/2)
+            createCannon(position: CGPoint(x: GameData.shared.deviceWidth + cannonWidth, y: randomY), size: CGSize(width: cannonWidth, height: cannonHeight))
+            
+            cannonInterval = random(min: cannonMinTime, max: cannonMaxTime)
+            cannonTimer = cannonInterval
         }
         
         if isHoldingJump {

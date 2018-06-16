@@ -19,7 +19,7 @@ class StartScene: SKScene {
     
     
     func createBackground() {
-        background = SKSpriteNode(imageNamed: "sky") // TODO
+        background = SKSpriteNode(imageNamed: "sky")
         background.zPosition = 1
         background.size = CGSize(width: frame.size.width, height: frame.size.height)
         background.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)

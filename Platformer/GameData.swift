@@ -37,5 +37,7 @@ class GameData {
     let enemy1MoveSpeed = 10
     let enemy1JumpHeight = 10
     
+    let cannonName = "cannon"
+    
     private init() { }
 }
