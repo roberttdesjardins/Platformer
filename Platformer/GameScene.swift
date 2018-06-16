@@ -156,14 +156,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         platformArr.append(platform)
     }
     
-    func createCannon(position: CGPoint, size: CGSize) {
+    func createCannon(position: CGPoint, size: CGSize) -> Cannon {
         let cannon: Cannon = Cannon(imageNamed: "cannon")
         cannon.position = position
         cannon.size = size
         cannon.zPosition = -1
         cannon.name = GameData.shared.cannonName
-        
         worldNode.addChild(cannon)
+        return cannon
     }
     
     func updateBackground() {
@@ -290,7 +290,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if cannonTimer <= 0 {
             let randomY = random(min: cannonHeight/2, max: GameData.shared.deviceHeight - cannonHeight/2)
-            createCannon(position: CGPoint(x: GameData.shared.deviceWidth + cannonWidth, y: randomY), size: CGSize(width: cannonWidth, height: cannonHeight))
+            let cannonCreated = createCannon(position: CGPoint(x: GameData.shared.deviceWidth + cannonWidth, y: randomY), size: CGSize(width: cannonWidth, height: cannonHeight))
+            cannonCreated.move()
             
             cannonInterval = random(min: cannonMinTime, max: cannonMaxTime)
             cannonTimer = cannonInterval
