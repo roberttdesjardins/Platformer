@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5583B4E520D5BE4B00E559B9 /* Cannon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5583B4E420D5BE4B00E559B9 /* Cannon.swift */; };
+		5583B4E720D7144300E559B9 /* CannonBall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5583B4E620D7144300E559B9 /* CannonBall.swift */; };
 		558DE3A820D05B8B004701D8 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DE3A720D05B8B004701D8 /* StartScene.swift */; };
 		558DE3AB20D05D25004701D8 /* Free-GUI-Buttons-039.wav in Resources */ = {isa = PBXBuildFile; fileRef = 558DE3AA20D05D25004701D8 /* Free-GUI-Buttons-039.wav */; };
 		558DE3AD20D06180004701D8 /* FTButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558DE3AC20D06180004701D8 /* FTButtonNode.swift */; };
@@ -22,7 +23,6 @@
 		55FBF35A20C898B300E8C951 /* PlatformerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF35920C898B300E8C951 /* PlatformerTests.swift */; };
 		55FBF36520C898B300E8C951 /* PlatformerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF36420C898B300E8C951 /* PlatformerUITests.swift */; };
 		55FBF37320C9CF9900E8C951 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF37220C9CF9900E8C951 /* Player.swift */; };
-		55FBF37520C9CFD100E8C951 /* Enemy1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF37420C9CFD100E8C951 /* Enemy1.swift */; };
 		55FBF37720C9D17D00E8C951 /* GameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF37620C9D17D00E8C951 /* GameData.swift */; };
 		55FBF37920C9D63300E8C951 /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55FBF37820C9D63300E8C951 /* PhysicsCategory.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		5583B4E420D5BE4B00E559B9 /* Cannon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cannon.swift; sourceTree = "<group>"; };
+		5583B4E620D7144300E559B9 /* CannonBall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CannonBall.swift; sourceTree = "<group>"; };
 		558DE3A720D05B8B004701D8 /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
 		558DE3AA20D05D25004701D8 /* Free-GUI-Buttons-039.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Free-GUI-Buttons-039.wav"; sourceTree = "<group>"; };
 		558DE3AC20D06180004701D8 /* FTButtonNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTButtonNode.swift; sourceTree = "<group>"; };
@@ -66,7 +67,6 @@
 		55FBF36420C898B300E8C951 /* PlatformerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlatformerUITests.swift; sourceTree = "<group>"; };
 		55FBF36620C898B300E8C951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		55FBF37220C9CF9900E8C951 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
-		55FBF37420C9CFD100E8C951 /* Enemy1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy1.swift; sourceTree = "<group>"; };
 		55FBF37620C9D17D00E8C951 /* GameData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameData.swift; sourceTree = "<group>"; };
 		55FBF37820C9D63300E8C951 /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -139,7 +139,7 @@
 				55B8B87520CC64420055B40E /* Platform.swift */,
 				55FBF37220C9CF9900E8C951 /* Player.swift */,
 				5583B4E420D5BE4B00E559B9 /* Cannon.swift */,
-				55FBF37420C9CFD100E8C951 /* Enemy1.swift */,
+				5583B4E620D7144300E559B9 /* CannonBall.swift */,
 				55FBF37620C9D17D00E8C951 /* GameData.swift */,
 				55FBF37820C9D63300E8C951 /* PhysicsCategory.swift */,
 				55B8B87720CC81CD0055B40E /* Helpers.swift */,
@@ -304,8 +304,8 @@
 				55FBF34520C898B100E8C951 /* GameScene.swift in Sources */,
 				5583B4E520D5BE4B00E559B9 /* Cannon.swift in Sources */,
 				558DE3A820D05B8B004701D8 /* StartScene.swift in Sources */,
-				55FBF37520C9CFD100E8C951 /* Enemy1.swift in Sources */,
 				55B8B87820CC81CD0055B40E /* Helpers.swift in Sources */,
+				5583B4E720D7144300E559B9 /* CannonBall.swift in Sources */,
 				55FBF34720C898B100E8C951 /* GameViewController.swift in Sources */,
 				55FBF33F20C898B100E8C951 /* AppDelegate.swift in Sources */,
 				55B8B87620CC64420055B40E /* Platform.swift in Sources */,

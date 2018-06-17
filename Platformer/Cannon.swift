@@ -10,7 +10,6 @@ import Foundation
 import SpriteKit
 
 class Cannon : SKSpriteNode, Entity{
-    var health: Int = 1
     
     var isAlive: Bool = true
     
@@ -18,8 +17,16 @@ class Cannon : SKSpriteNode, Entity{
 
     
     func attack(handleComplete:@escaping (()->())) {
-        // TODO: Add cannon ball
         print("Cannon Attacking")
+        let cannonBall = CannonBall()
+        cannonBall.initCannonBall()
+        cannonBall.position = self.position
+        worldNode.addChild(cannonBall)
+        let cannonBallWait = SKAction.wait(forDuration: 0.5)
+        let cannonBallMove = SKAction.run {
+            cannonBall.move()
+        }
+        cannonBall.run(SKAction.sequence([cannonBallWait, cannonBallMove]))
         
         var gifCannonAttack: [SKTexture] = []
         for i in 1...7 {

@@ -9,15 +9,16 @@
 import SpriteKit
 import GameplayKit
 
+let worldNode = SKNode()
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    let worldNode = SKNode()
     
     // floatingPlatform
     var creatingFloatingPlatform = false
     var floatingPlatformHeight: CGFloat = 0
     var floatingPlatformWidth: CGFloat = 0
-    let floatingPlatformMinTime:Double = 0.2
-    let floatingPlatformMaxTime:Double = 1.2
+    let floatingPlatformMinTime:Double = 0.01
+    let floatingPlatformMaxTime:Double = 0.8
     var floatingPlatformTimer:TimeInterval = 0
     var floatingPlatformInterval:TimeInterval = 2
     var platformArr: [SKSpriteNode] = []
@@ -27,7 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cannonWidth: CGFloat = 0
     let cannonMinTime: Double = 2
     let cannonMaxTime: Double = 4.5
-    var cannonTimer: TimeInterval = 10
+    var cannonTimer: TimeInterval = 5
     var cannonInterval: TimeInterval = 4
     
     
@@ -160,7 +161,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let cannon: Cannon = Cannon(imageNamed: "black_cannon_frame_001")
         cannon.position = position
         cannon.size = size
-        cannon.zPosition = -1
+        cannon.zPosition = 2
         cannon.name = GameData.shared.cannonName
         worldNode.addChild(cannon)
         return cannon
@@ -173,7 +174,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateForeground() {
-        moveAlongAndRemove(array: &platformArr, speed: 6)
+        moveAlongAndRemove(array: &platformArr, speed: 3)
     }
     
     func moveAlong(array: [SKSpriteNode], speed: CGFloat) {
@@ -281,7 +282,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if creatingFloatingPlatform && floatingPlatformTimer <= 0 {
             
-            let randomY = random(min: GameData.shared.deviceHeight/4, max: GameData.shared.deviceHeight - floatingPlatformHeight)
+            let randomY = random(min: floatingPlatformHeight/2, max: GameData.shared.deviceHeight - floatingPlatformHeight)
             createFloatingPlatform(position: CGPoint(x: GameData.shared.deviceWidth + floatingPlatformWidth, y: randomY), size: CGSize(width: floatingPlatformWidth, height: floatingPlatformHeight))
             
             floatingPlatformInterval = random(min: floatingPlatformMinTime, max: floatingPlatformMaxTime)
@@ -312,17 +313,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 // PROTOCOLS
 protocol Entity {
-    var health: Int {get set}
     var isAlive: Bool {get set}
-    
     static func uid() -> String
-    mutating func hitTaken()
 }
 
 extension Entity {
     static func uid() -> String {
         return UUID().uuidString
     }
+}
+
+protocol ObjectWithHealth: Entity {
+    var health: Int {get set}
+    mutating func hitTaken()
+}
+
+extension ObjectWithHealth {
     mutating func hitTaken() {
         if health > 0 {
             health -= 1

@@ -18,26 +18,22 @@ class GameData {
     var deviceHeight = UIScreen.main.bounds.size.height
     
     let playerName = "player"
-    let playerSize = CGSize(width: 40, height: 40)
+    let playerSize = CGSize(width: 40, height: 40) // TODO: Change based on screen size
     let playerTexture = SKTexture(imageNamed: "player_idle_frame_0_delay-0.13s")
     let playerHealth = 100
     let playerAttackDamage = 10
     let playerMoveSpeed = 10
     //let playerJumpHeight = 28
-    let playerJumpHeight = 20
-    let playerJumpHolding: CGFloat = 2.8
+    let playerJumpHeight = 17
+    let playerJumpHolding: CGFloat = 2.4
     
     let platformName = "platform"
     
-    let enemy1Name = "enemy1"
-    let enemy1Size = CGSize(width: 40, height: 40)
-    let enemy1Texture = "" // TODO
-    let enemy1Health = 10
-    let enemy1AttackDamage = 2
-    let enemy1MoveSpeed = 10
-    let enemy1JumpHeight = 10
-    
     let cannonName = "cannon"
+    
+    let cannonBallName = "cannonBall"
+    let cannonBallSize = CGSize(width: 40, height: 40) // TODO: Change based on cannon size
+    let cannonBallMoveSpeed = 40
     
     private init() { }
 }

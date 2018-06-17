@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-class Player : SKSpriteNode, Entity, ObjectThatAttacks, ObjectThatJumps {
+class Player : SKSpriteNode, Entity, ObjectThatAttacks, ObjectThatJumps, ObjectWithHealth {
     var isAlive = true
     var jumpHeight: Int = GameData.shared.playerJumpHeight
     var health: Int = GameData.shared.playerHealth
@@ -29,7 +29,7 @@ class Player : SKSpriteNode, Entity, ObjectThatAttacks, ObjectThatJumps {
         self.physicsBody?.restitution = 0.0
         self.physicsBody?.friction = 0.0
         self.physicsBody?.categoryBitMask = PhysicsCategory.Player
-        self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform 
+        self.physicsBody?.contactTestBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform | PhysicsCategory.Enemy | PhysicsCategory.Projectile
         self.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Platform
     }
     
