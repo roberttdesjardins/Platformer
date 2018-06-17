@@ -27,7 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var cannonWidth: CGFloat = 0
     let cannonMinTime: Double = 2
     let cannonMaxTime: Double = 4.5
-    var cannonTimer: TimeInterval = 20
+    var cannonTimer: TimeInterval = 10
     var cannonInterval: TimeInterval = 4
     
     
@@ -49,7 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         floatingPlatformHeight = GameData.shared.deviceHeight / 5
         floatingPlatformWidth = floatingPlatformHeight * 1.28947
         cannonHeight = GameData.shared.deviceHeight / 4
-        cannonWidth = cannonHeight * 1  //TODO get actual ratio
+        cannonWidth = cannonHeight * 1.77777777
         //createScreen()
         setUpBackground()
         setUpPlayer()
@@ -157,7 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createCannon(position: CGPoint, size: CGSize) -> Cannon {
-        let cannon: Cannon = Cannon(imageNamed: "cannon")
+        let cannon: Cannon = Cannon(imageNamed: "black_cannon_frame_001")
         cannon.position = position
         cannon.size = size
         cannon.zPosition = -1

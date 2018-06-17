@@ -18,9 +18,15 @@ class Cannon : SKSpriteNode, Entity{
 
     
     func attack(handleComplete:@escaping (()->())) {
-        //TODO: Attack
+        // TODO: Add cannon ball
         print("Cannon Attacking")
-        let attack = SKAction.move(by: CGVector(dx: 0, dy: 25), duration: 2)
+        
+        var gifCannonAttack: [SKTexture] = []
+        for i in 1...7 {
+            gifCannonAttack.append(SKTexture(imageNamed: "black_cannon_frame_00\(i)"))
+        }
+        
+        let attack = SKAction.animate(with: gifCannonAttack, timePerFrame: 0.1)
         self.run(attack, completion: {handleComplete()})
     }
     
