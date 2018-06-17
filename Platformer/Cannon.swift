@@ -9,29 +9,30 @@
 import Foundation
 import SpriteKit
 
-class Cannon : SKSpriteNode, Entity, ObjectThatAttacks, ObjectThatMoves{
+class Cannon : SKSpriteNode, Entity{
     var health: Int = 1
     
     var isAlive: Bool = true
     
     var attackDamage: Int = 1
+
     
-    func attack() {
-        
+    func attack(handleComplete:@escaping (()->())) {
+        //TODO: Attack
+        print("Cannon Attacking")
+        let attack = SKAction.move(by: CGVector(dx: 0, dy: 25), duration: 2)
+        self.run(attack, completion: {handleComplete()})
     }
     
-    var moveSpeed: Int = Int(GameData.shared.deviceWidth / 100)
-    
-    func move() {
-        let moveFoward = SKAction.move(by: CGVector(dx: -GameData.shared.deviceWidth/10, dy: 0), duration: 2.0)
+    func run(size: CGSize) {
+        let moveFoward = SKAction.move(by: CGVector(dx: -size.width, dy: 0), duration: 3.0)
+        let moveBackwards = SKAction.move(by: CGVector(dx: size.width, dy: 0), duration: 3.0)
         let attack = SKAction.run {
-            self.attack()
+            self.attack { () -> () in
+                self.run(moveBackwards, completion: { self.removeFromParent()})
+            }
         }
-        let moveBackwards = SKAction.move(by: CGVector(dx: GameData.shared.deviceWidth/10, dy: 0), duration: 2.0)
-        let moveAttackMoveDelete = SKAction.sequence([moveFoward, attack, moveBackwards])
-        self.run(moveAttackMoveDelete, completion: {
-            self.removeFromParent()
-        })
+        self.run(SKAction.sequence([moveFoward, attack]))
     }
     
     

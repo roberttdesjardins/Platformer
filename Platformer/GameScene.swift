@@ -290,8 +290,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if cannonTimer <= 0 {
             let randomY = random(min: cannonHeight/2, max: GameData.shared.deviceHeight - cannonHeight/2)
-            let cannonCreated = createCannon(position: CGPoint(x: GameData.shared.deviceWidth + cannonWidth, y: randomY), size: CGSize(width: cannonWidth, height: cannonHeight))
-            cannonCreated.move()
+            let cannonSize = CGSize(width: cannonWidth, height: cannonHeight)
+            let cannonCreated = createCannon(position: CGPoint(x: GameData.shared.deviceWidth + cannonWidth, y: randomY), size: cannonSize)
+            cannonCreated.run(size: cannonSize)
             
             cannonInterval = random(min: cannonMinTime, max: cannonMaxTime)
             cannonTimer = cannonInterval
